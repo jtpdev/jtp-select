@@ -3,6 +3,9 @@ import { NgModule } from '@angular/core';
 
 
 import { AppComponent } from './app.component';
+import { SelectComponent } from './select/select.component';
+import { LevenshteinService } from 'simple-levenshtein';
+import { SelectModule } from './select/select.module';
 
 
 @NgModule({
@@ -10,9 +13,12 @@ import { AppComponent } from './app.component';
     AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    SelectModule
   ],
-  providers: [],
+  providers: [
+        LevenshteinService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
