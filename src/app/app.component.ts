@@ -51,12 +51,41 @@ export class AppComponent {
       {
         id: 8,
         text: 'Wood Jhonson',
-        genre: 'male'
+        genre: 'male',
+        onclick: () => {
+          alert('You clicked in: Wood Jhonson')
+        },
+        add: false
       }
     ]
   }
 
   change(value){
     this.selecteds = value;
+  }
+
+  type(event){
+    const value = event.target.value;
+    this.data.items = this.data.items.filter(i => i.id != 0);
+    if(this.data.items.filter(i => i.text.toLocaleLowerCase().indexOf(value.toLocaleLowerCase()) > -1).length == 0)
+    this.data.items.push({
+      id: 0,
+      text: 'Criar: ' + value,
+      genre: 'male',
+      onclick: () => {
+        const newPerson = {
+          id: this.data.items.sort((i1, i2) => (i1.id - i2.id) * -1)[0].id + 1,
+          text: value,
+          genre: 'male'
+        };
+        this.data.items.push(newPerson)
+        this.data.items = this.data.items.filter(i => i.id != 0);
+        this.select.add(newPerson);
+        this.select.updateItems();
+      },
+      add: false
+    })
+    // console.log(this.select)
+    this.select.updateItems();
   }
 }

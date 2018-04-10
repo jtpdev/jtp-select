@@ -1,2 +1,2 @@
-import { SelectModule } from './src/app/select/select.module';
-import { SelectComponent } from './src/app/select/select.component';
+export { SelectModule } from './src/app/select/select.module';
+export { SelectComponent } from './src/app/select/select.component';

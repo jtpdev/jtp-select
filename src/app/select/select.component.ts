@@ -14,6 +14,7 @@ export class SelectComponent implements OnInit {
   @Output() onSelect = new EventEmitter<any>();
   @Output() onRemove = new EventEmitter<any>();
   @Output() onChange = new EventEmitter<any>();
+  @Output() onType = new EventEmitter<any>();
   @ViewChild('typer') typer;
   items = [];
   onSelectSub: Subscription;
@@ -28,11 +29,16 @@ export class SelectComponent implements OnInit {
 
   ngOnInit() {
     if (this.data && this.data.items) {
-      this.items = this.data.items;
-      this.items.sort((i1, i2) => i1.text.localeCompare(i2.text));
+      this.updateItems();
     }
     this.onSelectSub = this.onSelect.subscribe(value => this.onChange.emit(value));
     this.onRemoveSub = this.onRemove.subscribe(value => this.onChange.emit(value));
+  }
+
+  public updateItems() {
+    this.items = this.data.items;
+    this.items.sort((i1, i2) => i1.text.localeCompare(i2.text));
+    this.find(this.typer.nativeElement.value);
   }
 
   ngOnDestroy() {
@@ -59,14 +65,18 @@ export class SelectComponent implements OnInit {
         this.items = this.items.filter(i => this.selecteds.map(it => JSON.stringify(it)).indexOf(JSON.stringify(i)) == -1);
       }
     }
-    this.selectedIndex = 0;
+    // this.selectedIndex = 0;
   }
 
   add(item) {
-    if (this.selecteds.filter(i => JSON.stringify(i) == JSON.stringify(item)).length == 0) {
+    if (this.selecteds.filter(i => JSON.stringify(i) == JSON.stringify(item)).length == 0
+      && (item.add || item.add == null)) {
       this.selecteds.push(item);
       this.onSelect.emit(this.selecteds);
       this.items = this.items.filter(i => this.selecteds.map(it => JSON.stringify(it)).indexOf(JSON.stringify(i)) == -1);
+    }
+    if(item.onclick){
+      item.onclick();
     }
     this.selectedIndex = 0;
   }
@@ -80,7 +90,7 @@ export class SelectComponent implements OnInit {
   }
 
   keyUp(event) {
-    console.log(event.keyCode)
+    this.onType.emit(event);
     if (event.keyCode == 9) {
       event.preventDefault();
     }
@@ -99,11 +109,9 @@ export class SelectComponent implements OnInit {
         this.selectedIndex--;
       }
     }
-    console.log(event.keyCode);
   }
   
   keyDown(event) {
-    console.log(event);
     if ([8,9].indexOf(event.keyCode) > -1
       && this.selecteds.length > 0
       && event.target.value.length == 0) {
@@ -117,19 +125,16 @@ export class SelectComponent implements OnInit {
   }
 
   close(event) {
-    console.log(event)
     if (this.isOpen && this.selectedIndex < 0) {
       this.isOpen = false;
     }
   }
 
   addByClick(item){
-    console.log('click')
     this.focus();       
     this.add(item);
     if(this.items.length > 0) this.selectedIndex = 0;
   }
-
 
   private focus() {
     this.typer.nativeElement.focus();

@@ -1,6 +1,6 @@
 {
   "name": "jtp-select",
-  "version": "0.0.1",
+  "version": "0.0.7",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -13,9 +13,7 @@
   },
   "keywords": [
     "angular",
-    "angular2",
-    "angular 2",
-    "angular4"
+    "angular5"
   ],
   "author": "Jimmy Porto",
   "repository": {
