@@ -11,6 +11,7 @@ import { Subscription } from 'rxjs/Subscription';
 export class SelectComponent implements OnInit {
 
   @Input() data;
+  @Input() multiple = true;
   @Output() onSelect = new EventEmitter<any>();
   @Output() onRemove = new EventEmitter<any>();
   @Output() onChange = new EventEmitter<any>();
@@ -22,6 +23,7 @@ export class SelectComponent implements OnInit {
   selecteds = [];
   isOpen = false;
   selectedIndex = 0;
+  typed;
 
   constructor(
     private levenshtein: LevenshteinService
@@ -69,16 +71,23 @@ export class SelectComponent implements OnInit {
   }
 
   add(item) {
-    if (this.selecteds.filter(i => JSON.stringify(i) == JSON.stringify(item)).length == 0
-      && (item.add || item.add == null)) {
-      this.selecteds.push(item);
+    if (this.multiple) {
+      if (this.selecteds.filter(i => JSON.stringify(i) == JSON.stringify(item)).length == 0
+        && (item.add || item.add == null)) {
+        this.selecteds.push(item);
+        this.onSelect.emit(this.selecteds);
+        this.items = this.items.filter(i => this.selecteds.map(it => JSON.stringify(it)).indexOf(JSON.stringify(i)) == -1);
+      }
+      this.selectedIndex = 0;
+    } else {
+      this.selecteds = [item];
       this.onSelect.emit(this.selecteds);
-      this.items = this.items.filter(i => this.selecteds.map(it => JSON.stringify(it)).indexOf(JSON.stringify(i)) == -1);
+      this.isOpen = false;
+      this.typed = item.text;
     }
-    if(item.onadd){
+    if (item.onadd) {
       item.onadd();
     }
-    this.selectedIndex = 0;
   }
 
   remove(selected) {
@@ -110,12 +119,12 @@ export class SelectComponent implements OnInit {
       }
     }
   }
-  
+
   keyDown(event) {
-    if ([8,9].indexOf(event.keyCode) > -1
+    if ([8, 9].indexOf(event.keyCode) > -1
       && this.selecteds.length > 0
       && event.target.value.length == 0) {
-        event.preventDefault();
+      event.preventDefault();
       this.remove(this.selecteds[this.selecteds.length - 1]);
     }
   }
@@ -127,23 +136,32 @@ export class SelectComponent implements OnInit {
   close(event) {
     if (this.isOpen && this.selectedIndex < 0) {
       this.isOpen = false;
+      if (this.selecteds.length == 0) {
+        this.typed = '';
+        this.find(this.typed);
+      }
     }
   }
 
-  addByClick(item){
-    this.focus();       
+  addByClick(item) {
+    this.focus();
     this.add(item);
-    if(this.items.length > 0) this.selectedIndex = 0;
+    if (this.items.length > 0) this.selectedIndex = 0;
   }
 
-  onclick(clickFunction){
-    if(clickFunction){
+  onclick(clickFunction) {
+    if (clickFunction) {
       clickFunction();
     }
   }
 
   private focus() {
+    console.log(document.activeElement)
     this.typer.nativeElement.focus();
     this.selectedIndex = 0;
+  }
+
+  private blurInputCursor() {
+    return document.activeElement.id != 'typer';
   }
 }

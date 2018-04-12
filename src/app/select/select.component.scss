@@ -16,6 +16,16 @@ input[type="text"]:focus {
     outline: none;
 }
 
+.blur {
+    outline: none;
+    color: transparent;
+    display: inline-block;
+    text-shadow: 0 0 0 rgb(73, 73, 73);
+    
+    &:focus {
+        outline: none;
+    }
+}
 
 .list {
     width: 100%;
@@ -70,6 +80,6 @@ input[type="text"]:focus {
     }
 }
 
-.selected-clickable {
+.clickable {
     cursor: pointer;
 }

@@ -1,26 +1,29 @@
 <div class="select">
   <div class="typer" (click)="focus()">
-     <div class="selecteds">
-       <div class="selected" *ngFor="let selected of selecteds" (click)="onclick(selected.onclick)" [ngClass]="{ 'selected-clickable': selected.onclick }">
-         {{ selected.text }}
-         <span class="ion-close-round" (click)="remove(selected)"></span>
-       </div>
-     </div>
-     <input 
-       #typer
-       type="text"
-       (input)="find($event.target.value)"
-       (keyup)="keyUp($event)"
-       (keydown)="keyDown($event)"
-       (focus)="isOpen = true"
-       (blur)="close($event)"
-       placeholder="{{ data.placeholder }}">
-   </div>
-   <div class="list" *ngIf="isOpen && items.length > 0">
-     <ul>
-       <li (mouseover)="setSelectedIndex(i)" (mouseleave)="setSelectedIndex(-1)" (click)="addByClick(item)" *ngFor="let item of items; let i = index" [ngClass]="{ 'selected-item': i == selectedIndex }">
-         {{ item.text }}
-       </li>
-     </ul>
-   </div>
- </div>
+    <div class="selecteds" *ngIf="multiple">
+      <div class="selected" *ngFor="let selected of selecteds" (click)="onclick(selected.onclick)" [ngClass]="{ 'clickable': selected.onclick }">
+        {{ selected.text }}
+        <span class="ion-close-round" (click)="remove(selected)"></span>
+      </div>
+    </div>
+    <input
+      id="typer"
+      [ngClass]="{ 'clickable': !multiple, 'blur': !multiple && blurInputCursor() }"
+      #typer type="text"
+      (input)="find($event.target.value)"
+      (keyup)="keyUp($event)"
+      (keydown)="keyDown($event)"
+      (focus)="isOpen = true"
+      (blur)="close($event)"
+      placeholder="{{ data.placeholder }}"
+      [(ngModel)]="typed">
+  </div>
+  <div class="list" *ngIf="isOpen && items.length > 0">
+    <ul>
+      <li (mouseover)="setSelectedIndex(i)" (mouseleave)="setSelectedIndex(-1)" (click)="addByClick(item)" *ngFor="let item of items; let i = index"
+        [ngClass]="{ 'selected-item': i == selectedIndex }">
+        {{ item.text }}
+      </li>
+    </ul>
+  </div>
+</div>

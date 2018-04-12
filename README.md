@@ -44,6 +44,7 @@ and use in your component:
 
     <jtp-select #select
       [data]="data"
+      [multiple]="true" // by default the value will always be true
       (onType)="type($event)"
       (onChange)="change($event)"></jtp-select>
 
@@ -104,8 +105,11 @@ and
             id: 8,
             text: 'Wood Jhonson',
             genre: 'male',
+            onadd: () => {
+              alert('You added: Wood Jhonson to the items') // this is the event that is call on add event
+            },
             onclick: () => {
-              alert('You clicked in: Wood Jhonson') // this is the event that is call on  add event
+              alert('You clicked in: Wood Jhonson') // this is the event that is call on click in an added item
             },
             add: false // If false, don't add on select's items
           }
@@ -124,7 +128,7 @@ and
           id: 0,
           text: 'Create: ' + value,
           genre: 'male',
-          onclick: () => {
+          onadd: () => {
             const newPerson = {
               id: this.data.items.sort((i1, i2) => (i1.id - i2.id) * -1)[0].id + 1,
               text: value,
