@@ -75,8 +75,8 @@ export class SelectComponent implements OnInit {
       this.onSelect.emit(this.selecteds);
       this.items = this.items.filter(i => this.selecteds.map(it => JSON.stringify(it)).indexOf(JSON.stringify(i)) == -1);
     }
-    if(item.onclick){
-      item.onclick();
+    if(item.onadd){
+      item.onadd();
     }
     this.selectedIndex = 0;
   }
@@ -134,6 +134,12 @@ export class SelectComponent implements OnInit {
     this.focus();       
     this.add(item);
     if(this.items.length > 0) this.selectedIndex = 0;
+  }
+
+  onclick(clickFunction){
+    if(clickFunction){
+      clickFunction();
+    }
   }
 
   private focus() {
