@@ -156,7 +156,6 @@ export class SelectComponent implements OnInit {
   }
 
   private focus() {
-    console.log(document.activeElement)
     this.typer.nativeElement.focus();
     this.selectedIndex = 0;
   }
