@@ -121,11 +121,16 @@ export class SelectComponent implements OnInit {
   }
 
   keyDown(event) {
-    if ([8, 9].indexOf(event.keyCode) > -1
+    if(event.keyCode == 8
       && this.selecteds.length > 0
-      && event.target.value.length == 0) {
-      event.preventDefault();
-      this.remove(this.selecteds[this.selecteds.length - 1]);
+      && event.target.value.length == 0){
+        this.remove(this.selecteds[this.selecteds.length - 1]);
+    }
+    if(event.keyCode == 9
+      && this.items.length > 0){
+        this.add(this.items[0]);
+        event.preventDefault();
+        this.focus();
     }
   }
 
