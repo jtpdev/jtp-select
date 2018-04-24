@@ -37,14 +37,15 @@ export class SelectComponent implements OnInit {
     this.onRemoveSub = this.onRemove.subscribe(value => this.onChange.emit(value));
   }
 
-  public updateItems() {
-    this.items = this.data.items;
-    this.items.sort((i1, i2) => i1.text.localeCompare(i2.text));
-    this.find(this.typer.nativeElement.value);
-  }
-
   ngOnDestroy() {
     this.unsubscribe(this.onSelectSub, this.onRemoveSub);
+  }
+
+  public updateItems() {
+    this.items = this.data.items;
+    this.items = this.items.filter(f => f && f.text);
+    this.items.sort((i1, i2) => i1.text.localeCompare(i2.text));
+    this.find(this.typer.nativeElement.value);
   }
 
   unsubscribe(...subscriptions: Subscription[]) {
@@ -61,13 +62,12 @@ export class SelectComponent implements OnInit {
 
   find(value) {
     if (this.data && this.data.items) {
-      this.items = this.data.items.filter(i => i.text.toLowerCase().trim().indexOf(value.toLowerCase().trim()) !== -1
-        || this.levenshtein.distance(i.text.toLowerCase().trim(), value.toLowerCase().trim()) < 3);
+      this.items = this.data.items.filter(i => i && i.text && (i.text.toLowerCase().trim().indexOf(value.toLowerCase().trim()) !== -1
+        || this.levenshtein.distance(i.text.toLowerCase().trim(), value.toLowerCase().trim()) < 3));
       if (this.selecteds.length > 0) {
         this.items = this.items.filter(i => this.selecteds.map(it => JSON.stringify(it)).indexOf(JSON.stringify(i)) == -1);
       }
     }
-    // this.selectedIndex = 0;
   }
 
   add(item) {
