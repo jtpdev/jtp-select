@@ -139,7 +139,7 @@ export class SelectComponent implements OnInit {
   }
 
   close(event) {
-    if (this.isOpen && this.selectedIndex < 0) {
+    if (this.isOpen) {
       this.isOpen = false;
       if (this.selecteds.length == 0) {
         this.typed = '';
