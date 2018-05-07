@@ -68,12 +68,14 @@ export class SelectComponent implements OnInit {
         this.items = this.items.filter(i => this.selecteds.map(it => JSON.stringify(it)).indexOf(JSON.stringify(i)) == -1);
       }
     }
+    // this.selectedIndex = 0;
   }
 
   add(item) {
     if (this.multiple) {
       if (this.selecteds.filter(i => JSON.stringify(i) == JSON.stringify(item)).length == 0
-        && (item.add || item.add == null)) {
+      && (item.add || item.add == null)) {
+        console.log('entrou')
         this.selecteds.push(item);
         this.onSelect.emit(this.selecteds);
         this.items = this.items.filter(i => this.selecteds.map(it => JSON.stringify(it)).indexOf(JSON.stringify(i)) == -1);
@@ -100,6 +102,12 @@ export class SelectComponent implements OnInit {
 
   keyUp(event) {
     this.onType.emit(event);
+    if (!this.multiple
+      && event.keyCode == 8
+      && this.selecteds.length > 0
+      && event.target.value.length == 0) {
+      this.remove(this.selecteds[this.selecteds.length - 1]);
+    }
     if (event.keyCode == 9) {
       event.preventDefault();
     }
@@ -121,16 +129,19 @@ export class SelectComponent implements OnInit {
   }
 
   keyDown(event) {
-    if(event.keyCode == 8
-      && this.selecteds.length > 0
-      && event.target.value.length == 0){
-        this.remove(this.selecteds[this.selecteds.length - 1]);
+    if(!this.isOpen) {
+      this.isOpen = true;
     }
-    if(event.keyCode == 9
-      && this.items.length > 0){
-        this.add(this.items[0]);
-        event.preventDefault();
-        this.focus();
+    if (event.keyCode == 8
+      && this.selecteds.length > 0
+      && event.target.value.length == 0) {
+      this.remove(this.selecteds[this.selecteds.length - 1]);
+    }
+    if (event.keyCode == 9
+      && this.items.length > 0) {
+      this.add(this.items[0]);
+      event.preventDefault();
+      this.focus();
     }
   }
 
