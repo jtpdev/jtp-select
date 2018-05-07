@@ -103,7 +103,6 @@ export class SelectComponent implements OnInit {
   keyUp(event) {
     this.onType.emit(event);
     if (!this.multiple
-      && event.keyCode == 8
       && this.selecteds.length > 0
       && event.target.value.length == 0) {
       this.remove(this.selecteds[this.selecteds.length - 1]);
