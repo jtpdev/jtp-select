@@ -14,7 +14,7 @@
       (keyup)="keyUp($event)"
       (keydown)="keyDown($event)"
       (focus)="isOpen = true"
-      (click)="open()"
+      (click)="open(typer.value)"
       (blur)="close($event)"
       placeholder="{{ data.placeholder }}"
       [(ngModel)]="typed">
@@ -23,7 +23,7 @@
     <ul>
       <li (mouseover)="setSelectedIndex(i)" (mouseleave)="setSelectedIndex(-1)" (click)="addByClick(item)" *ngFor="let item of items; let i = index"
         [ngClass]="{ 'selected-item': i == selectedIndex }">
-        {{ item.text }}
+        {{ item?.text }}
       </li>
     </ul>
   </div>

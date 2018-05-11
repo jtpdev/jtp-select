@@ -69,6 +69,9 @@ export class SelectComponent implements OnInit {
           this.items = this.items.filter(i => this.selecteds.map(it => JSON.stringify(it)).indexOf(JSON.stringify(i)) == -1);
         }
       }
+    } else {
+      this.items = this.data.items.filter(i => i && i.text && (i.text.toLowerCase().trim().indexOf(value.toLowerCase().trim()) !== -1
+      || this.levenshtein.distance(i.text.toLowerCase().trim(), value.toLowerCase().trim()) < 3));
     }
     // this.selectedIndex = 0;
   }
@@ -97,7 +100,9 @@ export class SelectComponent implements OnInit {
   remove(selected) {
     this.selecteds = this.selecteds.filter(i => JSON.stringify(i) != JSON.stringify(selected));
     this.onRemove.emit(this.selecteds);
-    this.items.push(selected);
+    if (this.multiple) {
+      this.items.push(selected);
+    }
     this.sort();
     this.selectedIndex = 0;
   }
@@ -175,8 +180,10 @@ export class SelectComponent implements OnInit {
     }
   }
 
-  open(){
-    this.isOpen = true
+  open(value){
+    this.isOpen = true;
+    this.items = this.data.items.filter(i => !value || i && i.text && (i.text.toLowerCase().trim().indexOf(value.toLowerCase().trim()) !== -1
+      || this.levenshtein.distance(i.text.toLowerCase().trim(), value.toLowerCase().trim()) < 3));
   }
 
   private focus() {
