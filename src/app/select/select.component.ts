@@ -61,11 +61,13 @@ export class SelectComponent implements OnInit {
   }
 
   find(value) {
-    if (this.data && this.data.items) {
-      this.items = this.data.items.filter(i => i && i.text && (i.text.toLowerCase().trim().indexOf(value.toLowerCase().trim()) !== -1
-        || this.levenshtein.distance(i.text.toLowerCase().trim(), value.toLowerCase().trim()) < 3));
-      if (this.selecteds.length > 0) {
-        this.items = this.items.filter(i => this.selecteds.map(it => JSON.stringify(it)).indexOf(JSON.stringify(i)) == -1);
+    if(this.multiple) {
+      if (this.data && this.data.items) {
+        this.items = this.data.items.filter(i => i && i.text && (i.text.toLowerCase().trim().indexOf(value.toLowerCase().trim()) !== -1
+          || this.levenshtein.distance(i.text.toLowerCase().trim(), value.toLowerCase().trim()) < 3));
+        if (this.selecteds.length > 0) {
+          this.items = this.items.filter(i => this.selecteds.map(it => JSON.stringify(it)).indexOf(JSON.stringify(i)) == -1);
+        }
       }
     }
     // this.selectedIndex = 0;
@@ -104,7 +106,8 @@ export class SelectComponent implements OnInit {
     this.onType.emit(event);
     if (!this.multiple
       && this.selecteds.length > 0
-      && event.target.value.length == 0) {
+      && event.target.value.length == 0
+      && this.isOpen) {
       this.remove(this.selecteds[this.selecteds.length - 1]);
     }
     if (event.keyCode == 9) {
@@ -138,9 +141,11 @@ export class SelectComponent implements OnInit {
     }
     if (event.keyCode == 9
       && this.items.length > 0) {
-      this.add(this.items[0]);
+        // if(this.multiple) {
+        //   this.add(this.items[0]);
+        // }
       event.preventDefault();
-      this.focus();
+      // this.focus();
     }
   }
 
@@ -168,6 +173,10 @@ export class SelectComponent implements OnInit {
     if (clickFunction) {
       clickFunction();
     }
+  }
+
+  open(){
+    this.isOpen = true
   }
 
   private focus() {
